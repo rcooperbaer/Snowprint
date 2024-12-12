@@ -4,6 +4,7 @@ from src.Create_Operons import create_operons
 from src.Update_Associations import update_associations
 from src.Create_Operators import create_operators
 from src.Analyze_Result import pull_operator, write_frontend_json
+from os import path
 
 from alive_progress import alive_bar
 
@@ -60,7 +61,15 @@ def snowprint(acc, **kwargs):
         data = pull_operator(acc)
         write_frontend_json(data)
 
-
+# Function to check and see if the supplied argument is a file: if it is, 
+# Snowprint should iterate over the entries in the list
+def check_for_acc_list(acc):
+    if path.exists(acc):
+        with open(acc, 'r') as f:
+            acc_list = f.read().splitlines()
+        return acc_list
+    else:
+        return False
 
 
 
@@ -68,4 +77,9 @@ def snowprint(acc, **kwargs):
 if __name__ == "__main__":
 
     acc = sys.argv[1]
-    snowprint(acc)
+    acc_list = check_for_acc_list(acc)
+    if acc_list == False:
+        snowprint(acc)
+    else:
+        for acc in acc_list:
+            snowprint(acc)
